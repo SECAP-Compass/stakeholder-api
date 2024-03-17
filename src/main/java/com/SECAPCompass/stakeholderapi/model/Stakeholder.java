@@ -12,4 +12,12 @@ public class Stakeholder {
         this.id = id;
         this.userName = userName;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 }
