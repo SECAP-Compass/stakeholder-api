@@ -1,8 +1,14 @@
 package com.SECAPCompass.stakeholderapi.model;
 
 import java.util.UUID;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+@Entity
 public class Comment {
+    @Id
+    @GeneratedValue
     private final UUID id;
     private final UUID commenterID;
     private String comment;
