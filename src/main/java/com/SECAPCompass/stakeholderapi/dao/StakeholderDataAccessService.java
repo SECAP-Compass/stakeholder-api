@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository("fakeDao")
+@Repository("STAKEHOLDER")
 public class StakeholderDataAccessService implements StakeholderDao{
 
     private static List<Stakeholder> DB = new ArrayList<Stakeholder>();
@@ -47,7 +47,8 @@ public class StakeholderDataAccessService implements StakeholderDao{
                 .map(s -> {
                     int indexOfStakeholder = DB.indexOf(s);
                     if (indexOfStakeholder >= 0){
-                        DB.set(indexOfStakeholder,new Stakeholder(id,stakeholder.getUserName()));
+                        DB.set(indexOfStakeholder,new Stakeholder(id,stakeholder.getUserName(),
+                                stakeholder.getName(),stakeholder.getSurname(),stakeholder.getCity()));
                         return 1;
                     }
                     return 0;
