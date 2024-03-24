@@ -15,7 +15,8 @@ public class StakeholderDataAccessService implements StakeholderDao{
 
     @Override
     public int insertStakeholder(UUID id, Stakeholder stakeholder) {
-        DB.add(new Stakeholder(id,stakeholder.getClass().getName()));
+        DB.add(new Stakeholder(id,stakeholder.getUserName(),stakeholder.getName(),
+                stakeholder.getSurname(),stakeholder.getCity()));
         return 0;
     }
 

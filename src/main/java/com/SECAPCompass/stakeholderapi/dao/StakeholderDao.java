@@ -22,5 +22,4 @@ public interface StakeholderDao {
     int deleteStakeholderByID(UUID id);
 
     int updateStakeholderByID(UUID id,Stakeholder stakeholder);
-
 }
