@@ -16,7 +16,7 @@ public class StakeholderService {
     private final StakeholderDao stakeholderDao;
 
     @Autowired
-    public StakeholderService(@Qualifier("fakeDao") StakeholderDao stakeholderDao) {
+    public StakeholderService(@Qualifier("STAKEHOLDER") StakeholderDao stakeholderDao) {
         this.stakeholderDao = stakeholderDao;
     }
 
@@ -39,5 +39,4 @@ public class StakeholderService {
     public int updateStakeholderByID(UUID id,Stakeholder stakeholder){
         return stakeholderDao.updateStakeholderByID(id,stakeholder);
     }
-
 }
