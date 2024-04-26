@@ -1,28 +1,24 @@
 package com.SECAPCompass.stakeholderapi.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.UUID;
 
+@Entity
 public class Stakeholder{
-    private final UUID id;
+    @Id
+    private UUID id;
     private final String userName;
+    private final String eMail;
     private String name;
     private String surname;
     private String city;
 
-    public Stakeholder(@JsonProperty("id") UUID id, @JsonProperty("name") String userName) {
-        this.id = id;
+    @Autowired
+    public Stakeholder(String userName, String eMail, String name, String surname, String city) {
         this.userName = userName;
-    }
-
-    public Stakeholder(@JsonProperty("id") UUID id, @JsonProperty("userName") String userName,
-                       @JsonProperty("name") String name, @JsonProperty("surname") String surname,
-                       @JsonProperty("city") String city) {
-        this.id = id;
-        this.userName = userName;
+        this.eMail = eMail;
         this.name = name;
         this.surname = surname;
         this.city = city;
@@ -32,8 +28,16 @@ public class Stakeholder{
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getUserName() {
         return userName;
+    }
+
+    public String geteMail() {
+        return eMail;
     }
 
     public String getName() {
