@@ -1,36 +1,36 @@
 package com.SECAPCompass.stakeholderapi.model;
 
+import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+
+import jakarta.persistence.*;
 
 @Entity
 public class Comment {
     @Id
     @GeneratedValue
     private final UUID id;
-    private final UUID commenterID;
     private String comment;
-    private final UUID topicID;
+    
+    private Integer order;
 
-    public Comment(UUID id, UUID commenterID, String comment, UUID topicID) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stakeholder_id")
+    private Stakeholder stakeholder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discussion_id")
+    private Discussion discussion;
+
+    public Comment(UUID id, String comment, Stakeholder stakeholder, Discussion discussion) {
         this.id = id;
-        this.commenterID = commenterID;
         this.comment = comment;
-        this.topicID = topicID;
+        this.stakeholder = stakeholder;
+        this.discussion = discussion;
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public UUID getTopicID() {
-        return topicID;
-    }
-
-    public UUID getCommenterID() {
-        return commenterID;
     }
 
     public String getComment() {
@@ -39,5 +39,21 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Stakeholder getStakeholder() {
+        return stakeholder;
+    }
+
+    public void setStakeholder(Stakeholder stakeholder) {
+        this.stakeholder = stakeholder;
+    }
+
+    public Discussion getDiscussion() {
+        return discussion;
+    }
+
+    public void setDiscussion(Discussion discussion) {
+        this.discussion = discussion;
     }
 }
