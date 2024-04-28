@@ -1,9 +1,8 @@
 package com.SECAPCompass.stakeholderapi.service;
 
-import com.SECAPCompass.stakeholderapi.dao.StakeholderDao;
+import com.SECAPCompass.stakeholderapi.dto.createStakeholder.CreateStakeholderRequest;
 import com.SECAPCompass.stakeholderapi.model.Stakeholder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.SECAPCompass.stakeholderapi.repository.StakeholderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,31 +12,25 @@ import java.util.UUID;
 @Service
 public class StakeholderService {
 
-    private final StakeholderDao stakeholderDao;
+    private final StakeholderRepository stakeholderRepository;
 
-    @Autowired
-    public StakeholderService(@Qualifier("fakeDao") StakeholderDao stakeholderDao) {
-        this.stakeholderDao = stakeholderDao;
+    public StakeholderService(StakeholderRepository stakeholderRepository) {
+        this.stakeholderRepository = stakeholderRepository;
     }
 
-    public int addPerson(Stakeholder stakeholder){
-        return stakeholderDao.insertStakeholder(stakeholder);
+    public Stakeholder addStakeholder(CreateStakeholderRequest createStakeholderRequest){
+        var stakeholder = new Stakeholder(createStakeholderRequest.userName(),createStakeholderRequest.eMail(),
+                createStakeholderRequest.name(), createStakeholderRequest.surname(), createStakeholderRequest.city());
+
+        return stakeholderRepository.save(stakeholder);
     }
 
-    public List<Stakeholder> getAllStakeholders(){
-        return stakeholderDao.selectAllStakeholders();
+    public Stakeholder getStakeholderById(UUID id){
+        return stakeholderRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public Optional<Stakeholder> getStakeholderByID(UUID id){
-        return stakeholderDao.selectPersonByID(id);
-    }
-
-    public int deleteStakeholderByID(UUID id){
-        return stakeholderDao.deleteStakeholderByID(id);
-    }
-
-    public int updateStakeholderByID(UUID id,Stakeholder stakeholder){
-        return stakeholderDao.updateStakeholderByID(id,stakeholder);
+    public Stakeholder getStakeholderByUserName(String userName){
+        return stakeholderRepository.findByUserName(userName).orElseThrow(RuntimeException::new);
     }
 
 }
