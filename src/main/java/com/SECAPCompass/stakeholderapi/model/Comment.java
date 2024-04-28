@@ -11,7 +11,7 @@ public class Comment {
     @GeneratedValue
     private final UUID id;
     private String comment;
-    
+
     private Integer order;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -32,4 +32,5 @@ public class StakeholderService {
     public Stakeholder getStakeholderByUserName(String userName){
         return stakeholderRepository.findByUserName(userName).orElseThrow(RuntimeException::new);
     }
+
 }
