@@ -2,6 +2,8 @@ package com.SECAPCompass.stakeholderapi.model;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +15,14 @@ public class Discussion {
     private UUID id;
     private String title;
     private String body;
-    private Date date;
+    private Instant instant;
+
+    private Boolean isEdited;
+
+    private Instant editDate;
+
+    public Boolean isClosed;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stakeholder_id")
     private Stakeholder stakeholder;
@@ -22,13 +31,13 @@ public class Discussion {
     @JoinColumn(name = "comment_id")
     private List<Comment> comments;
 
-    public Discussion(UUID id, String title, String body, Date date, Stakeholder stakeholder, List<Comment> comments) {
-        this.id = id;
+    public Discussion(String title, String body, Instant instant) {
         this.title = title;
         this.body = body;
-        this.date = date;
-        this.stakeholder = stakeholder;
-        this.comments = comments;
+        this.instant = instant;
+        isEdited = false;
+        isClosed = false;
+        comments = new ArrayList<>();
     }
 
     public UUID getId() {
@@ -47,12 +56,12 @@ public class Discussion {
         this.title = title;
     }
 
-    public Date getDate() {
-        return date;
+    public Instant getInstant() {
+        return instant;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setInstant(Instant instant) {
+        this.instant = instant;
     }
 
     public Stakeholder getStakeholder() {
@@ -77,5 +86,29 @@ public class Discussion {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public Instant getEditDate() {
+        return editDate;
+    }
+
+    public void setEditDate(Instant editDate) {
+        this.editDate = editDate;
+    }
+
+    public Boolean getEdited() {
+        return isEdited;
+    }
+
+    public void setEdited(Boolean edited) {
+        isEdited = edited;
+    }
+
+    public Boolean getClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(Boolean closed) {
+        isClosed = closed;
     }
 }
