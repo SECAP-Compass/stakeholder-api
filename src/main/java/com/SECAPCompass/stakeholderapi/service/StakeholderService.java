@@ -1,6 +1,7 @@
 package com.SECAPCompass.stakeholderapi.service;
 
 import com.SECAPCompass.stakeholderapi.dto.createStakeholder.CreateStakeholderRequest;
+import com.SECAPCompass.stakeholderapi.dto.updateStakeholder.UpdateStakeholderRequest;
 import com.SECAPCompass.stakeholderapi.model.Stakeholder;
 import com.SECAPCompass.stakeholderapi.repository.StakeholderRepository;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,14 @@ public class StakeholderService {
         var stakeholder = new Stakeholder(createStakeholderRequest.userName(),createStakeholderRequest.eMail(),
                 createStakeholderRequest.name(), createStakeholderRequest.surname(), createStakeholderRequest.city());
 
+        return stakeholderRepository.save(stakeholder);
+    }
+
+    public Stakeholder updateStakeholder(UpdateStakeholderRequest updateStakeholderRequest){
+        var stakeholder = stakeholderRepository.findById(updateStakeholderRequest.userId()).orElseThrow(RuntimeException::new);
+        stakeholder.setCity(updateStakeholderRequest.city());
+        stakeholder.setName(updateStakeholderRequest.name());
+        stakeholder.setSurname(updateStakeholderRequest.surname());
         return stakeholderRepository.save(stakeholder);
     }
 

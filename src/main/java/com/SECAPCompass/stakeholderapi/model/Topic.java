@@ -7,23 +7,16 @@ import jakarta.persistence.Id;
 import java.util.UUID;
 
 @Entity
-public class Topic {
-    @Id
-    @GeneratedValue
-    private final UUID id;
+public class Topic extends BaseText{
     private String topicTitle;
     private UUID ownerID;
     private String ownerName;
 
-    public Topic(UUID id, String topicTitle, UUID ownerID, String ownerName) {
-        this.id = id;
+    public Topic(String body, String topicTitle, UUID ownerID, String ownerName) {
+        super(body);
         this.topicTitle = topicTitle;
         this.ownerID = ownerID;
         this.ownerName = ownerName;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public String getTopicTitle() {

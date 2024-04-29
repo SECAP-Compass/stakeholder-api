@@ -28,10 +28,10 @@ public class DiscussionController {
     CreateDiscussionResponse createNewDiscussion(@RequestBody CreateDiscussionRequest createDiscussionRequest){
         var owner = stakeholderService.getStakeholderById(createDiscussionRequest.userId());
         var discussion = discussionService.addDiscussion(createDiscussionRequest,owner);
-        return new CreateDiscussionResponse(discussion.getTitle(),discussion.getBody(),discussion.getInstant(),discussion.getId());
+        return new CreateDiscussionResponse(discussion.getTitle(),discussion.getBody(),discussion.getCreateInstant(),discussion.getId());
     }
 
-    @PutMapping
+    @PutMapping("/update")
     UpdateDiscussionResponse updateDiscussion(@RequestBody UpdateDiscussionRequest updateDiscussionRequest){
         var discussion = discussionService.updateDiscussion(updateDiscussionRequest);
         return new UpdateDiscussionResponse();
@@ -45,5 +45,11 @@ public class DiscussionController {
     @GetMapping("/{id}")
     Discussion getDiscussionById(@PathVariable UUID id){
         return discussionService.getDiscussionById(id);
+    }
+
+    @PutMapping("/close")
+    void closeDiscussion(@PathVariable UUID id){
+        var discussion = discussionService.getDiscussionById(id);
+        discussionService.closeDiscussion(discussion);
     }
 }

@@ -9,19 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Discussion {
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Discussion extends BaseText{
     private String title;
-    private String body;
-    private Instant instant;
-
-    private Boolean isEdited;
-
-    private Instant editDate;
-
     public Boolean isClosed;
+    public Instant closeInstant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stakeholder_id")
@@ -31,21 +22,11 @@ public class Discussion {
     @JoinColumn(name = "comment_id")
     private List<Comment> comments;
 
-    public Discussion(String title, String body, Instant instant) {
-        this.title = title;
-        this.body = body;
-        this.instant = instant;
-        isEdited = false;
+    public Discussion(String body, String title) {
+        super(body);
         isClosed = false;
         comments = new ArrayList<>();
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
+        this.title = title;
     }
 
     public String getTitle() {
@@ -56,12 +37,20 @@ public class Discussion {
         this.title = title;
     }
 
-    public Instant getInstant() {
-        return instant;
+    public Boolean getClosed() {
+        return isClosed;
     }
 
-    public void setInstant(Instant instant) {
-        this.instant = instant;
+    public void setClosed(Boolean closed) {
+        isClosed = closed;
+    }
+
+    public Instant getCloseInstant() {
+        return closeInstant;
+    }
+
+    public void setCloseInstant(Instant closeInstant) {
+        this.closeInstant = closeInstant;
     }
 
     public Stakeholder getStakeholder() {
@@ -78,37 +67,5 @@ public class Discussion {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public Instant getEditDate() {
-        return editDate;
-    }
-
-    public void setEditDate(Instant editDate) {
-        this.editDate = editDate;
-    }
-
-    public Boolean getEdited() {
-        return isEdited;
-    }
-
-    public void setEdited(Boolean edited) {
-        isEdited = edited;
-    }
-
-    public Boolean getClosed() {
-        return isClosed;
-    }
-
-    public void setClosed(Boolean closed) {
-        isClosed = closed;
     }
 }
