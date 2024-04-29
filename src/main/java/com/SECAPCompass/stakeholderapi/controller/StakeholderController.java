@@ -35,5 +35,4 @@ public class StakeholderController {
         var stakeholder = stakeholderService.getStakeholderByUserName(userName);
         return new GetStakeholderResponse();
     }
-
 }

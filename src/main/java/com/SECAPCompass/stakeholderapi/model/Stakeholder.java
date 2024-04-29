@@ -21,16 +21,8 @@ public class Stakeholder extends User{
     public Stakeholder(String userName, String eMail, String name, String surname, String city) {
         super(userName, eMail, name, surname);
         this.city = city;
-    }
-
-    @Override
-    public UUID getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(UUID id) {
-        this.id = id;
+        discussions = new ArrayList<>();
+        comments = new ArrayList<>();
     }
 
     public String getCity() {
