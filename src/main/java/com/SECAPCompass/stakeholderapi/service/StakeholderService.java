@@ -2,7 +2,11 @@ package com.SECAPCompass.stakeholderapi.service;
 
 import com.SECAPCompass.stakeholderapi.dto.createStakeholder.CreateStakeholderRequest;
 import com.SECAPCompass.stakeholderapi.dto.updateStakeholder.UpdateStakeholderRequest;
+import com.SECAPCompass.stakeholderapi.exception.DomainNotFoundException;
+import com.SECAPCompass.stakeholderapi.exception.EntityNotFoundException;
+import com.SECAPCompass.stakeholderapi.exception.UsernameNotFound;
 import com.SECAPCompass.stakeholderapi.model.Stakeholder;
+import com.SECAPCompass.stakeholderapi.model.User;
 import com.SECAPCompass.stakeholderapi.repository.StakeholderRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +31,11 @@ public class StakeholderService {
     }
 
     public Stakeholder updateStakeholder(UpdateStakeholderRequest updateStakeholderRequest){
-        var stakeholder = stakeholderRepository.findById(updateStakeholderRequest.userId()).orElseThrow(RuntimeException::new);
+        if(updateStakeholderRequest == null){
+            throw new EntityNotFoundException("entity.not-found",UpdateStakeholderRequest.class.getName());
+        }
+        var stakeholder = stakeholderRepository.findById(updateStakeholderRequest.userId())
+                .orElseThrow(() -> new DomainNotFoundException("domain.not-found",updateStakeholderRequest.userId()));
         stakeholder.setCity(updateStakeholderRequest.city());
         stakeholder.setName(updateStakeholderRequest.name());
         stakeholder.setSurname(updateStakeholderRequest.surname());
@@ -35,11 +43,12 @@ public class StakeholderService {
     }
 
     public Stakeholder getStakeholderById(UUID id){
-        return stakeholderRepository.findById(id).orElseThrow(RuntimeException::new);
+        return stakeholderRepository.findById(id)
+                .orElseThrow(() -> new DomainNotFoundException("domain.not-found",id));
     }
 
     public Stakeholder getStakeholderByUserName(String userName){
-        return stakeholderRepository.findByUserName(userName).orElseThrow(RuntimeException::new);
+        return stakeholderRepository.findByUserName(userName).orElseThrow(() -> new UsernameNotFound("username.not-found",userName));
     }
 
 }

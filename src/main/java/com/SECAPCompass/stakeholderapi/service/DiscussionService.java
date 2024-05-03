@@ -2,6 +2,9 @@ package com.SECAPCompass.stakeholderapi.service;
 
 import com.SECAPCompass.stakeholderapi.dto.createDiscussion.CreateDiscussionRequest;
 import com.SECAPCompass.stakeholderapi.dto.updateDiscussion.UpdateDiscussionRequest;
+import com.SECAPCompass.stakeholderapi.exception.DiscussionIsClosedException;
+import com.SECAPCompass.stakeholderapi.exception.DomainNotFoundException;
+import com.SECAPCompass.stakeholderapi.exception.EntityNotFoundException;
 import com.SECAPCompass.stakeholderapi.model.Comment;
 import com.SECAPCompass.stakeholderapi.model.Discussion;
 import com.SECAPCompass.stakeholderapi.model.Stakeholder;
@@ -30,9 +33,10 @@ public class DiscussionService {
     }
 
     public Discussion updateDiscussion(UpdateDiscussionRequest updateDiscussionRequest){
-        var discussion = discussionRepository.findById(updateDiscussionRequest.discussionId()).orElseThrow(RuntimeException::new);
+        var discussion = discussionRepository.findById(updateDiscussionRequest.discussionId())
+                .orElseThrow(() -> new DomainNotFoundException("domain.not-found",updateDiscussionRequest.discussionId()));
         if(discussion.isClosed){
-            throw new RuntimeException();
+            throw new DiscussionIsClosedException("discussion.is-closed",discussion.getId());
         }
         discussion.setTitle(updateDiscussionRequest.title());
         discussion.setBody(updateDiscussionRequest.body());
@@ -42,25 +46,27 @@ public class DiscussionService {
     }
 
     public Discussion getDiscussionById(UUID id){
-        return discussionRepository.findById(id).orElseThrow(RuntimeException::new);
-    }
-
-    public List<Discussion> getDiscussionsByTitleKeyword(String keyword){
-        if(keyword == null){
-            throw new RuntimeException();
-        }
-        return discussionRepository.findByTitleContainingIgnoreCase(keyword);
+        return discussionRepository.findById(id).orElseThrow(() -> new DomainNotFoundException("domain.not-found",id));
     }
 
     public void addCommentToDiscussion(Discussion discussion, Comment comment){
+        if(discussion == null){
+            throw new EntityNotFoundException("entity.not-found",Discussion.class.getName());
+        }
         if(discussion.isClosed){
-            throw new RuntimeException();
+            throw new DiscussionIsClosedException("discussion.is-closed",discussion.getId());
+        }
+        if(comment == null){
+            throw new EntityNotFoundException("entity.not-found",Comment.class.getName());
         }
         discussion.getComments().add(comment);
         discussionRepository.save(discussion);
     }
 
     public void closeDiscussion(Discussion discussion){
+        if(discussion == null){
+            throw new EntityNotFoundException("entity.not-found",Discussion.class.getName());
+        }
         if(discussion.isClosed){
             throw new RuntimeException();
         }

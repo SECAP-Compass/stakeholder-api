@@ -2,9 +2,11 @@ package com.SECAPCompass.stakeholderapi.service;
 
 import com.SECAPCompass.stakeholderapi.dto.createComment.CreateCommentRequest;
 import com.SECAPCompass.stakeholderapi.dto.updateComment.UpdateCommentRequest;
+import com.SECAPCompass.stakeholderapi.exception.DiscussionIsClosedException;
+import com.SECAPCompass.stakeholderapi.exception.DomainNotFoundException;
+import com.SECAPCompass.stakeholderapi.exception.EntityNotFoundException;
 import com.SECAPCompass.stakeholderapi.model.Comment;
 import com.SECAPCompass.stakeholderapi.repository.CommentRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,8 +25,11 @@ public class CommentService {
         return commentRepository.save(comment);
     }
     public void markCommentAsRemoved(Comment comment){
+        if(comment == null){
+            throw new EntityNotFoundException("entity.not-found",Comment.class.getName());
+        }
         if(comment.getDiscussion().isClosed){
-            throw new RuntimeException();
+            throw new DiscussionIsClosedException("discussion.is-closed",comment.getDiscussion().getId());
         }
         comment.setBody("Comment Removed");
         comment.setRemoved(true);
@@ -33,9 +38,9 @@ public class CommentService {
     }
 
     public void updateComment(UpdateCommentRequest updateCommentRequest){
-        var comment = commentRepository.findById(updateCommentRequest.commentId()).orElseThrow(RuntimeException::new);
+        var comment = commentRepository.findById(updateCommentRequest.commentId()).orElseThrow(()-> new DomainNotFoundException("domain.not-found",updateCommentRequest.commentId()));
         if(comment.getDiscussion().isClosed){
-            throw new RuntimeException();
+            throw new DiscussionIsClosedException("discussion.is-closed",comment.getDiscussion().getId());
         }
         comment.setBody(updateCommentRequest.body());
         comment.setEditInstant(Instant.now());

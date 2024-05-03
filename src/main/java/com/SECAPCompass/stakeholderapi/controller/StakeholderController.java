@@ -6,6 +6,8 @@ import com.SECAPCompass.stakeholderapi.dto.getStakeholder.GetStakeholderResponse
 import com.SECAPCompass.stakeholderapi.dto.updateStakeholder.UpdateStakeholderRequest;
 import com.SECAPCompass.stakeholderapi.dto.updateStakeholder.UpdateStakeholderResponse;
 import com.SECAPCompass.stakeholderapi.service.StakeholderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -20,15 +22,17 @@ public class StakeholderController {
     }
 
     @PostMapping
-    CreateStakeholderResponse createStakeholder(@RequestBody CreateStakeholderRequest createStakeholderRequest){
+    ResponseEntity<CreateStakeholderResponse> createStakeholder(@RequestBody CreateStakeholderRequest createStakeholderRequest){
         var stakeholder = stakeholderService.addStakeholder(createStakeholderRequest);
-        return new CreateStakeholderResponse(stakeholder.getUserName(),stakeholder.geteMail());
+        return new ResponseEntity<>(
+                new CreateStakeholderResponse(stakeholder.getUserName(),stakeholder.geteMail()),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    UpdateStakeholderResponse updateStakeholder(@RequestBody UpdateStakeholderRequest updateStakeholderRequest){
+    ResponseEntity<UpdateStakeholderResponse> updateStakeholder(@RequestBody UpdateStakeholderRequest updateStakeholderRequest){
         stakeholderService.updateStakeholder(updateStakeholderRequest);
-        return new UpdateStakeholderResponse();
+        return new ResponseEntity<>(new UpdateStakeholderResponse(),HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")

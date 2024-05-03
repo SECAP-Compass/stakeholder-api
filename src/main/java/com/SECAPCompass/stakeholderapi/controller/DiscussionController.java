@@ -7,6 +7,8 @@ import com.SECAPCompass.stakeholderapi.dto.updateDiscussion.UpdateDiscussionResp
 import com.SECAPCompass.stakeholderapi.model.Discussion;
 import com.SECAPCompass.stakeholderapi.service.DiscussionService;
 import com.SECAPCompass.stakeholderapi.service.StakeholderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -25,16 +27,19 @@ public class DiscussionController {
     }
 
     @PostMapping
-    CreateDiscussionResponse createNewDiscussion(@RequestBody CreateDiscussionRequest createDiscussionRequest){
+    ResponseEntity<CreateDiscussionResponse> createNewDiscussion(@RequestBody CreateDiscussionRequest createDiscussionRequest){
         var owner = stakeholderService.getStakeholderById(createDiscussionRequest.userId());
         var discussion = discussionService.addDiscussion(createDiscussionRequest,owner);
-        return new CreateDiscussionResponse(discussion.getTitle(),discussion.getBody(),discussion.getCreateInstant(),discussion.getId());
+        return new ResponseEntity<>(
+                new CreateDiscussionResponse(discussion.getTitle(),discussion.getBody(),discussion.getCreateInstant(),discussion.getId()),
+                HttpStatus.CREATED
+        );
     }
 
     @PutMapping("/update")
-    UpdateDiscussionResponse updateDiscussion(@RequestBody UpdateDiscussionRequest updateDiscussionRequest){
+    ResponseEntity<UpdateDiscussionResponse> updateDiscussion(@RequestBody UpdateDiscussionRequest updateDiscussionRequest){
         var discussion = discussionService.updateDiscussion(updateDiscussionRequest);
-        return new UpdateDiscussionResponse();
+        return new ResponseEntity<>(new UpdateDiscussionResponse(),HttpStatus.OK);
     }
 
     @DeleteMapping("/remove/{id}")
