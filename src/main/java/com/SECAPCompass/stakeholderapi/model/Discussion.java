@@ -2,18 +2,18 @@ package com.SECAPCompass.stakeholderapi.model;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Discussion {
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Discussion extends BaseText{
     private String title;
-    private String body;
-    private Date date;
+    public Boolean isClosed;
+    public Instant closeInstant;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stakeholder_id")
     private Stakeholder stakeholder;
@@ -22,21 +22,11 @@ public class Discussion {
     @JoinColumn(name = "comment_id")
     private List<Comment> comments;
 
-    public Discussion(UUID id, String title, String body, Date date, Stakeholder stakeholder, List<Comment> comments) {
-        this.id = id;
+    public Discussion(String body, String title) {
+        super(body);
+        isClosed = false;
+        comments = new ArrayList<>();
         this.title = title;
-        this.body = body;
-        this.date = date;
-        this.stakeholder = stakeholder;
-        this.comments = comments;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -47,12 +37,20 @@ public class Discussion {
         this.title = title;
     }
 
-    public Date getDate() {
-        return date;
+    public Boolean getClosed() {
+        return isClosed;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setClosed(Boolean closed) {
+        isClosed = closed;
+    }
+
+    public Instant getCloseInstant() {
+        return closeInstant;
+    }
+
+    public void setCloseInstant(Instant closeInstant) {
+        this.closeInstant = closeInstant;
     }
 
     public Stakeholder getStakeholder() {
@@ -69,13 +67,5 @@ public class Discussion {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 }

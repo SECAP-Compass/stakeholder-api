@@ -1,4 +1,9 @@
 package com.SECAPCompass.stakeholderapi.dto.updateDiscussion;
 
-public record UpdateDiscussionRequest() {
+import java.util.UUID;
+
+public record UpdateDiscussionRequest(
+        String title,
+        String body
+) {
 }
