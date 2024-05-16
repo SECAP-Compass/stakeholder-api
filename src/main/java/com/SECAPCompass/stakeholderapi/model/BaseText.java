@@ -2,10 +2,12 @@ package com.SECAPCompass.stakeholderapi.model;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
 import java.time.Instant;
 import java.util.UUID;
 
+@MappedSuperclass
 public abstract class BaseText {
     @Id
     @GeneratedValue

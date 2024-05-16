@@ -1,15 +1,16 @@
 package com.SECAPCompass.stakeholderapi.model;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import jakarta.persistence.*;
 
 @Entity
 public class Comment extends BaseText{
-    private Integer order;
+    private Integer commentOrder;
     private Instant removeInstant;
     private Boolean isRemoved;
+    private Boolean isUpdated;
+    private Instant updateInstant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stakeholder_id")
@@ -24,14 +25,31 @@ public class Comment extends BaseText{
         this.isRemoved = false;
         this.stakeholder = stakeholder;
         this.discussion = discussion;
+        this.isUpdated = false;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Boolean getUpdated() {
+        return isUpdated;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setUpdated(Boolean updated) {
+        isUpdated = updated;
+    }
+
+    public Instant getUpdateInstant() {
+        return updateInstant;
+    }
+
+    public void setUpdateInstant(Instant updateInstant) {
+        this.updateInstant = updateInstant;
+    }
+
+    public Integer getCommentOrder() {
+        return commentOrder;
+    }
+
+    public void setCommentOrder(Integer commentOrder) {
+        this.commentOrder = commentOrder;
     }
 
     public Instant getRemoveInstant() {

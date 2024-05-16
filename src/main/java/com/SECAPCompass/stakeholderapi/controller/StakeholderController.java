@@ -29,10 +29,12 @@ public class StakeholderController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    ResponseEntity<UpdateStakeholderResponse> updateStakeholder(@RequestBody UpdateStakeholderRequest updateStakeholderRequest){
-        stakeholderService.updateStakeholder(updateStakeholderRequest);
-        return new ResponseEntity<>(new UpdateStakeholderResponse(),HttpStatus.OK);
+    @PutMapping("/update/{stakeholderId}")
+    ResponseEntity<UUID> updateStakeholder(@RequestBody UpdateStakeholderRequest updateStakeholderRequest,
+                                                                @PathVariable UUID stakeholderId){
+        var stakeholder = stakeholderService.getStakeholderById(stakeholderId);
+        stakeholder = stakeholderService.updateStakeholder(updateStakeholderRequest,stakeholder);
+        return new ResponseEntity<>(stakeholder.getId(),HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")

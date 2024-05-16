@@ -32,9 +32,13 @@ public class DiscussionService {
         return discussionRepository.save(discussion);
     }
 
-    public Discussion updateDiscussion(UpdateDiscussionRequest updateDiscussionRequest){
-        var discussion = discussionRepository.findById(updateDiscussionRequest.discussionId())
-                .orElseThrow(() -> new DomainNotFoundException("domain.not-found",updateDiscussionRequest.discussionId()));
+    public Discussion updateDiscussion(UpdateDiscussionRequest updateDiscussionRequest,Discussion discussion){
+        if(updateDiscussionRequest == null){
+            throw new EntityNotFoundException("entity.not-found",UpdateDiscussionRequest.class.getName());
+        }
+        if(discussion == null){
+            throw new EntityNotFoundException("entity.not-found",Discussion.class.getName());
+        }
         if(discussion.isClosed){
             throw new DiscussionIsClosedException("discussion.is-closed",discussion.getId());
         }
@@ -60,6 +64,7 @@ public class DiscussionService {
             throw new EntityNotFoundException("entity.not-found",Comment.class.getName());
         }
         discussion.getComments().add(comment);
+        comment.setDiscussion(discussion);
         discussionRepository.save(discussion);
     }
 
@@ -71,6 +76,19 @@ public class DiscussionService {
             throw new RuntimeException();
         }
         discussion.setClosed(true);
+        discussionRepository.save(discussion);
+    }
+
+    public void markDiscussionAsRemoved(Discussion discussion){
+        if(discussion == null){
+            throw new EntityNotFoundException("entity.not-found",Discussion.class.getName());
+        }
+        discussion.setClosed(true);
+        discussion.setBody("Discussion is removed");
+        for(Comment c:discussion.getComments()){
+            c.setRemoved(true);
+            c.setBody("Comment removed due to discussion status");
+        }
         discussionRepository.save(discussion);
     }
 

@@ -10,6 +10,7 @@ import com.SECAPCompass.stakeholderapi.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Service
 public class CommentService {
@@ -24,6 +25,20 @@ public class CommentService {
         var comment = new Comment(createCommentRequest.body(),createCommentRequest.stakeholder(),createCommentRequest.discussion());
         return commentRepository.save(comment);
     }
+
+    public Comment updateComment(UpdateCommentRequest updateCommentRequest,Comment comment){
+        if(updateCommentRequest == null){
+            throw new EntityNotFoundException("entity.not-found",UpdateCommentRequest.class.getName());
+        }
+        comment.setBody(updateCommentRequest.body());
+        comment.setUpdated(true);
+        comment.setUpdateInstant(Instant.now());
+        return commentRepository.save(comment);
+    }
+    public Comment getCommentById(UUID id){
+        return commentRepository.findById(id).orElseThrow(()-> new DomainNotFoundException("domain.not-found",id));
+    }
+
     public void markCommentAsRemoved(Comment comment){
         if(comment == null){
             throw new EntityNotFoundException("entity.not-found",Comment.class.getName());

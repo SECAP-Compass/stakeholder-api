@@ -1,4 +1,8 @@
 package com.SECAPCompass.stakeholderapi.dto.createComment;
 
-public record CreateCommentResponse() {
+import java.util.UUID;
+
+public record CreateCommentResponse(
+        UUID commentId
+) {
 }

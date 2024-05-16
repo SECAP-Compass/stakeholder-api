@@ -36,10 +36,11 @@ public class DiscussionController {
         );
     }
 
-    @PutMapping("/update")
-    ResponseEntity<UpdateDiscussionResponse> updateDiscussion(@RequestBody UpdateDiscussionRequest updateDiscussionRequest){
-        var discussion = discussionService.updateDiscussion(updateDiscussionRequest);
-        return new ResponseEntity<>(new UpdateDiscussionResponse(),HttpStatus.OK);
+    @PutMapping("/update/{discussionId}")
+    ResponseEntity<UUID> updateDiscussion(@RequestBody UpdateDiscussionRequest updateDiscussionRequest, @PathVariable  UUID discussionId){
+        var discussion = discussionService.getDiscussionById(discussionId);
+        discussion = discussionService.updateDiscussion(updateDiscussionRequest,discussion);
+        return new ResponseEntity<>(discussion.getId(),HttpStatus.OK);
     }
 
     @DeleteMapping("/remove/{id}")
@@ -52,7 +53,7 @@ public class DiscussionController {
         return discussionService.getDiscussionById(id);
     }
 
-    @PutMapping("/close")
+    @PutMapping("/close{id}")
     void closeDiscussion(@PathVariable UUID id){
         var discussion = discussionService.getDiscussionById(id);
         discussionService.closeDiscussion(discussion);
